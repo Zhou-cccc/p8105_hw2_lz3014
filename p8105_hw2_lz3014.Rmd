@@ -1,0 +1,30 @@
+---
+title: "p8105_hw2_lz3014"
+auther: "Liqi Zhou"
+date: 2024-10-02
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+# problem1
+### 1.Read, clean and convert the data
+```{r}
+NYC_subway <- read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", 
+                       na = c("NA",".",""))
+NYC_subway_clean <- janitor::clean_names(NYC_subway) |>
+  select(line, station_name, station_latitude, station_longitude, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11, entry, vending, entrance_type, ada) |>
+  mutate(entry = case_match(entry, "YES" ~ TRUE, "NO" ~ FALSE))
+NYC_subway_clean
+```
+
+### 2.Simple info about this dataset
+This dataset contains various variabels related to subways in New York, including *line*, *station name*, *station latitude and longitude*, *routes*, *entry*, *ADA compliance* and so on. To clean the data, firstly, I imported the dataset and used `janitor::clean_names` function to clean up variable names. Then, I used `select` to retain the required variables. Finally, I used `case_match` function to convert the *entry* from character to a logical variable.
+
+After data cleaning process, this data has `r nrow(NYC_subway_clean)` rows and `r ncol(NYC_subway_clean)` columns. These data are not tidy since from route1to route11 can be reduced to one variable. 
+
+
+
