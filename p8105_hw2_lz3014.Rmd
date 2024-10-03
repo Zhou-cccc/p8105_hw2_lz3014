@@ -99,7 +99,34 @@ trash_wheel <- read_excel("./data/202409 Trash Wheel Collection Data.xlsx",
 trash_wheel_clean <- trash_wheel |>
   filter(!is.na(dumpster)) |> 
   mutate(sports_balls = round(sports_balls) |>
-           as.integer(), year = as.double(year))
+           as.integer(), year = as.double(year)) |>
+  mutate(trash_w = "mr.")
 trash_wheel_clean
 ```
+
+### 2.Import, clean, and organize the data for Professor Trash Wheel and Gwynnda, and combine this with the Mr. Trash Wheel dataset.
+```{r}
+pro_trash_wheel <- read_excel("./data/202409 Trash Wheel Collection Data.xlsx", 
+                              skip = 1, 
+                              sheet = "Professor Trash Wheel", 
+                              na = c("NA",".","")) |> 
+  janitor::clean_names() |> 
+  filter(!is.na(dumpster)) |>
+  mutate(trash_w = "professor")
+```
+
+```{r}
+gwy_trash_wheel <- read_excel("./data/202409 Trash Wheel Collection Data.xlsx", 
+                              skip = 1, 
+                              sheet = "Gwynnda Trash Wheel", 
+                              na = c("NA",".","")) |> 
+  janitor::clean_names() |> 
+  filter(!is.na(dumpster)) |>
+  mutate(trash_w = "gwynnda")
+```
+
+```{r}
+trash_wheel_three <- bind_rows(trash_wheel_clean, pro_trash_wheel, gwy_trash_wheel)
+```
+
 
