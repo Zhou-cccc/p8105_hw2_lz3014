@@ -52,4 +52,41 @@ proportion <- ee_novend_en_num/nrow(NYC_subway_clean)
 proportion
 ```
 
+### 4.Reformat data and 2 questions
+```{r}
+NYC_subway_clean <- NYC_subway_clean |>
+  mutate(across(starts_with("route"), as.character))
+
+NYC_subway_tidy <- 
+  pivot_longer(
+    NYC_subway_clean, 
+    route1:route11, 
+    names_to = "route_number", 
+    names_prefix = "route", 
+    values_to = "route_name"
+  )
+NYC_subway_tidy
+```
+
+- How many distinct stations serve the A train?
+```{r}
+A_station_num <- NYC_subway_tidy |>
+  filter(route_name == "A") |>
+  distinct(line, station_name) |>
+  nrow()
+A_station_num
+```
+
+- Of the stations that serve the A train, how many are ADA compliant?
+```{r}
+A_ADA_station_num <- NYC_subway_tidy |>
+  filter(route_name == "A" & ada == TRUE) |>
+  distinct(line, station_name) |>
+  nrow()
+A_ADA_station_num
+```
+
+
+
+
 
