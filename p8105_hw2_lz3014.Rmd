@@ -255,4 +255,37 @@ star_baker_winner
 - **predictable overall winners:** Nadiya for S6, Candice for S7, Sophie for S8, Rahul for S9  
 - **surprises:** Nancy for S5, David for S10  
 
+### 4.`viewers` dataset
+- import and show the first 10 rows of this dataset
+```{r}
+viewers <- read_csv("./data/gbb_datasets/viewers.csv", na = c("N/A","NA"," ")) |>
+  janitor::clean_names()
+
+viewers_tidy <-
+  pivot_longer(
+  viewers,
+  series_1:series_10,
+  names_to = "series",
+  names_prefix = "series_",
+  values_to = "viewership"
+  )
+
+head(viewers_tidy, 10)
+```
+
+- What was the average viewership in Season 1?
+```{r}
+avg_viewers_s1 <- viewers_tidy |>
+  filter(series == "1") |>
+  summarise(avg_viewership = mean(viewership, na.rm = TRUE))
+avg_viewers_s1
+```
+
+- In Season 5?
+```{r}
+avg_viewers_s5 <- viewers_tidy |>
+  filter(series == "5") |>
+  summarise(avg_viewership = mean(viewership, na.rm = TRUE))
+avg_viewers_s5
+```
 
