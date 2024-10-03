@@ -150,3 +150,94 @@ total_weight_pro <- trash_wheel_three |>
 total_weight_pro
 ```
 
+
+# Problem 3
+### 1.Create and export a single, well-organized dataset, named `gbb`
+- import, clean, tidy, and otherwise wrangle each of these datasets
+```{r}
+bakers <- read_csv("./data/gbb_datasets/bakers.csv", na = c("N/A","NA"," ")) |>
+  janitor::clean_names() |>
+  rename(full_name = baker_name)
+bakers
+```
+
+```{r}
+bakes <- read_csv("./data/gbb_datasets/bakes.csv", na = c("N/A","NA"," ")) |>
+  janitor::clean_names()
+bakes
+```
+
+```{r}
+results <- read_csv("./data/gbb_datasets/results.csv", skip = 2, na = c("N/A","NA"," ")) |>
+  janitor::clean_names()
+results
+```
+
+- check for completeness and correctness across datasets
+```{r}
+# bakers & bakes
+bakers <- bakers |>
+  mutate(baker = str_extract(full_name, "^[^ ]+"))
+
+missing_bakes_bakers <- bakes |>
+  anti_join(bakers, by = c("baker", "series"))
+
+missing_bakers_bakes <- bakers |>
+  anti_join(bakes, by = c("baker", "series"))
+
+missing_bakes_bakers
+missing_bakers_bakes
+```
+
+```{r}
+# bakers & results
+missing_results_bakers <- results |>
+  anti_join(bakers, by = c("baker", "series"))
+
+missing_bakers_results <- bakers |>
+  anti_join(results, by = c("baker", "series"))
+
+missing_results_bakers
+missing_bakers_results
+```
+
+```{r}
+# bakes & results
+missing_results_bakes <- results |>
+  anti_join(bakes, by = c("baker", "series"))
+
+missing_bakes_results <- bakes |>
+  anti_join(results, by = c("baker", "series"))
+
+missing_results_bakes
+missing_bakes_results
+```
+
+- Unify "Jo Wheatley" in bakers, "'Jo'" in bakes and "Joanne" in results
+```{r}
+bakes_clean <- bakes |>
+  mutate(bakes, baker = str_replace(baker, "\"Jo\"", "Jo"))
+results_clean <- results |>
+  mutate(results, baker = str_replace(baker, "Joanne", "Jo"))
+```
+
+note: `bakes` dataset still lacks 9 and 10 series data.
+
+- merge to create a single, final dataset and organize it
+```{r}
+results_bakers <- results_clean |> 
+  left_join(bakers, by = c("baker", "series"))
+
+gbb <- results_bakers |> 
+  left_join(bakes_clean, by = c("baker", "series", "episode")) |>
+  select(baker, full_name, everything())
+gbb
+```
+
+- Export the result as a CSV
+```{r}
+write_csv(gbb, "./data/gbb_datasets/gbb.csv")
+```
+
+
+
