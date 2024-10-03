@@ -240,7 +240,9 @@ write_csv(gbb, "./data/gbb_datasets/gbb.csv")
 ```
 
 ### 2.Describe data cleaning process and discuss the final dataset.
-
+- I imported the bakers, bakes and results data sets respectively, renamed the *baker_name* column in bakers to *full_name*, extracted the first name of all Bakers and named it *baker*.
+- I used the "anti_join" function to compare the three datasets in pairs, and found that there was a baker whose name was not uniform in the three tables, so she was collectively called "Jo" for the purpose of subsequent table merger. In addition, the bakes table lacks data for the 9th and 10th quarters.
+- Merge three forms into **gbb**
 
 
 ### 3.Create a table showing the star baker or winner of each episode in Seasons 5 through 10.
