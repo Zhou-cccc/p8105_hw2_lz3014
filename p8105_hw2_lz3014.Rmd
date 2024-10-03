@@ -26,5 +26,30 @@ This dataset contains various variabels related to subways in New York, includin
 
 After data cleaning process, this data has `r nrow(NYC_subway_clean)` rows and `r ncol(NYC_subway_clean)` columns. These data are not tidy since from route1to route11 can be reduced to one variable. 
 
+### 3.Answer 3 questions
+- How many distinct stations are there?
+```{r}
+station_num <- distinct(NYC_subway_clean, line, station_name) |>
+  nrow()
+station_num
+```
+
+- How many stations are ADA compliant?
+```{r}
+ADA_station_num <- NYC_subway_clean |>
+  filter(ada == TRUE) |>
+  distinct(line, station_name) |>
+  nrow()
+ADA_station_num
+```
+
+- What proportion of station entrances / exits without vending allow entrance?
+```{r}
+ee_novend_en_num <- NYC_subway_clean |>
+  filter(vending == "NO" & entry == TRUE) |>
+  nrow()
+proportion <- ee_novend_en_num/nrow(NYC_subway_clean)
+proportion
+```
 
 
